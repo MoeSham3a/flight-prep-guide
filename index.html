@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="day">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emirates Flight Preparation Guide (Version 5.0 Dec 2025)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Cockpit Header / App Bar -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand-section">
+        <div class="brand-badge">
+          <span>✈</span> EMIRATES
+        </div>
+        <div class="title-group">
+          <h1>Flight Preparation Guide</h1>
+          <div class="title-meta">
+            <span>Version 5.0 (Dec 2025)</span>
+            <span>•</span>
+            <span>LIFUS & Line Ops</span>
+            <span class="status-badge">
+              <span class="status-indicator"></span>
+              <span id="saveStatus">Autosave Ready</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <!-- Live UTC Clock -->
+        <div class="clock-display" id="utcClock" title="Coordinated Universal Time (UTC)">
+          --:--:-- UTC
+        </div>
+
+        <!-- Quick Demo Flight -->
+        <button type="button" class="btn btn-secondary btn-sm" id="btnSampleFlight" title="Populate realistic sample flight DXB → LHR">
+          📋 Sample Flight (DXB-LHR)
+        </button>
+
+        <!-- JSON Import/Export -->
+        <button type="button" class="btn btn-outline btn-sm" id="btnExportJson" title="Export flight data as JSON file">
+          ⬇ Export JSON
+        </button>
+        <button type="button" class="btn btn-outline btn-sm" id="btnImportJson" title="Import previously saved flight JSON">
+          ⬆ Import JSON
+        </button>
+        <input type="file" id="jsonFileInput" accept=".json" style="display:none;">
+
+        <!-- Print / PDF -->
+        <button type="button" class="btn btn-primary btn-sm" id="btnPrint" title="Print or save as 4-page official PDF">
+          🖨 Print / PDF
+        </button>
+
+        <!-- Theme Toggle -->
+        <button type="button" class="btn btn-outline btn-icon" id="btnThemeToggle" title="Toggle Day / Night Cockpit Mode">
+          🌙
+        </button>
+
+        <!-- Reset Form -->
+        <button type="button" class="btn btn-outline btn-sm" id="btnResetForm" title="Clear all fields">
+          🗑 Reset
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Step Tab Navigation -->
+  <nav class="nav-bar">
+    <div class="nav-container">
+      <button class="nav-tab active" data-target="page-1">
+        <span>1. Preparation & Departure</span>
+      </button>
+      <button class="nav-tab" data-target="page-2">
+        <span>2. En-route & Briefings</span>
+      </button>
+      <button class="nav-tab" data-target="page-3">
+        <span>3. Waypoints & Aerodromes</span>
+      </button>
+      <button class="nav-tab" data-target="page-4">
+        <span>4. Arrival & Alternate</span>
+      </button>
+      <button class="nav-tab" data-target="all-pages">
+        <span>📄 View All Pages</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Flight Briefing Form -->
+  <main class="app-main">
+    <form id="flightPrepForm" autocomplete="off">
+
+      <!-- ===================================================================
+           PAGE 1: PREPARATION & DEPARTURE
+           =================================================================== -->
+      <section class="sheet-page" id="page-1">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Emirates Flight Preparation Guide</h2>
+            <div class="section-subtitle">PAGE 1 OF 4 — PRE-FLIGHT PREPARATION & DEPARTURE THREATS</div>
+          </div>
+          <div class="no-print">
+            <button type="button" class="btn btn-outline btn-sm" id="btnToggleAllPrep">Select All Checklists</button>
+          </div>
+        </div>
+
+        <!-- Guidance Banner (Collapsible) -->
+        <details class="info-callout" open>
+          <summary>Using this form (LIFUS Training & Line Operations Guidance)</summary>
+          <p>
+            • The purpose of this form is to aid in flight preparation during LIFUS training.<br>
+            • It may be used in electronic or in printed format.<br>
+            • Use of this form is <strong>mandatory for trainees undertaking LIFUS training</strong>; it is however accepted that last-minute roster changes may preclude this.<br>
+            • Completed sections should be discussed with the trainer prior to departure.<br>
+            • It is worth noting that it may take up to 3 hours to prepare appropriately for a flight to a new destination or through a new area/region.<br>
+            • Line pilots can use the form should they wish to.
+          </p>
+        </details>
+
+        <!-- Preparation Checklist Grid -->
+        <div class="section-header" style="border-bottom-width: 1px; margin-top: 1rem;">
+          <h3 style="font-size: 1rem; font-weight: 700;">Preparation Checklist</h3>
+        </div>
+
+        <div class="checklist-grid" id="prepChecklist">
+          <label class="checklist-item">
+            <input type="checkbox" name="prep_fci_fcn" id="prep_fci_fcn">
+            <span>FCI / FCN</span>
+          </label>
+          <label class="checklist-item">
+            <input type="checkbox" name="prep_lido_mbriefing" id="prep_lido_mbriefing">
+            <span>LIDO mBriefing</span>
+          </label>
+          <label class="checklist-item">
+            <input type="checkbox" name="prep_lido_mpilot" id="prep_lido_mpilot">
+            <span>LIDO mPilot</span>
+          </label>
+          <label class="checklist-item">
+            <input type="checkbox" name="prep_cci_aoi" id="prep_cci_aoi">
+            <span>CCI / AOI</span>
+          </label>
+          <label class="checklist-item">
+            <input type="checkbox" name="prep_asr" id="prep_asr">
+            <span>ASR</span>
+          </label>
+          <label class="checklist-item">
+            <input type="checkbox" name="prep_flight_pulse" id="prep_flight_pulse">
+            <span>Flight Pulse</span>
+          </label>
+          <label class="checklist-item">
+            <input type="checkbox" name="prep_omc_brief" id="prep_omc_brief">
+            <span>OM-C Area Brief</span>
+          </label>
+          <label class="checklist-item">
+            <input type="checkbox" name="prep_lido_rsi" id="prep_lido_rsi">
+            <span>LIDO RSI</span>
+          </label>
+          <label class="checklist-item">
+            <input type="checkbox" name="prep_lido_crar" id="prep_lido_crar">
+            <span>LIDO CRAR</span>
+          </label>
+          <label class="checklist-item">
+            <input type="checkbox" name="prep_noaa_space" id="prep_noaa_space">
+            <span>NOAA Space WX</span>
+          </label>
+          <label class="checklist-item">
+            <input type="checkbox" name="prep_layover_brief" id="prep_layover_brief">
+            <span>Layover Brief</span>
+          </label>
+        </div>
+
+        <!-- Flight Details Grid -->
+        <div class="data-table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 25%;">Flight Number</th>
+                <th style="width: 25%;">Callsign</th>
+                <th style="width: 25%;">Registration</th>
+                <th style="width: 25%;">Engines</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><input type="text" class="table-input input-uppercase" name="flight_number" placeholder="e.g. EK 007"></td>
+                <td><input type="text" class="table-input input-uppercase" name="callsign" placeholder="e.g. UAE 7"></td>
+                <td><input type="text" class="table-input input-uppercase" name="registration" placeholder="e.g. A6-EOE"></td>
+                <td><input type="text" class="table-input" name="engines" placeholder="e.g. GE90-115B / EA GP7200 / Trent"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Aerodromes Schedule Table -->
+        <div class="data-table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 15%;">Leg</th>
+                <th style="width: 20%;">IATA / ICAO</th>
+                <th style="width: 25%;">STD / ETA UTC</th>
+                <th style="width: 25%;">STD / ETA LT</th>
+                <th style="width: 15%;">COMP FREQ</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="font-weight: 800; background-color: var(--color-bg-card-subtle);">DEP</td>
+                <td><input type="text" class="table-input input-uppercase" name="dep_aerodrome" placeholder="DXB / OMDB"></td>
+                <td><input type="text" class="table-input input-uppercase" name="dep_utc" placeholder="STD 03:00 Z"></td>
+                <td><input type="text" class="table-input" name="dep_lt" placeholder="STD 07:00 LT (+4)"></td>
+                <td><input type="text" class="table-input input-uppercase" name="dep_comp_freq" placeholder="131.725"></td>
+              </tr>
+              <tr>
+                <td style="font-weight: 800; background-color: var(--color-bg-card-subtle);">ARR</td>
+                <td><input type="text" class="table-input input-uppercase" name="arr_aerodrome" placeholder="LHR / EGLL"></td>
+                <td><input type="text" class="table-input input-uppercase" name="arr_utc" placeholder="ETA 10:45 Z"></td>
+                <td><input type="text" class="table-input" name="arr_lt" placeholder="ETA 10:45 LT (0)"></td>
+                <td><input type="text" class="table-input input-uppercase" name="arr_comp_freq" placeholder="131.850"></td>
+              </tr>
+              <tr>
+                <td style="font-weight: 800; background-color: var(--color-bg-card-subtle);">ALTN</td>
+                <td><input type="text" class="table-input input-uppercase" name="altn_aerodrome" placeholder="LGW / EGKK"></td>
+                <td><input type="text" class="table-input input-uppercase" name="altn_utc" placeholder="ETA 11:30 Z"></td>
+                <td><input type="text" class="table-input" name="altn_lt" placeholder="ETA 11:30 LT (0)"></td>
+                <td><input type="text" class="table-input input-uppercase" name="altn_comp_freq" placeholder="131.600"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Departure Section Header -->
+        <div class="section-header" style="border-bottom-width: 2px; margin-top: 1.5rem;">
+          <h3 class="section-title">Departure</h3>
+        </div>
+
+        <!-- Weather Box -->
+        <div class="weather-block">
+          <div class="weather-header">
+            <span>Departure Weather (METAR / TAF / NOTAMs / Runway Condition)</span>
+            <div class="quick-tokens no-print">
+              <span class="token-chip" data-target="dep_weather" data-text="CAVOK ">CAVOK</span>
+              <span class="token-chip" data-target="dep_weather" data-text="TEMPO ">TEMPO</span>
+              <span class="token-chip" data-target="dep_weather" data-text="RWY INSP ">RWY INSP</span>
+              <span class="token-chip" data-target="dep_weather" data-text="WIND SHEAR ">WIND SHEAR</span>
+              <span class="token-chip" data-target="dep_weather" data-text="LOW VIS PROCS ">LVP</span>
+            </div>
+          </div>
+          <textarea class="weather-textarea" id="dep_weather" name="dep_weather" rows="2" placeholder="Enter departure METAR, TAF, runway surface condition, ATIS, or weather threats..."></textarea>
+        </div>
+
+        <!-- Departure Threat & Mitigation Table -->
+        <div class="data-table-wrapper">
+          <table class="data-table tem-table">
+            <thead>
+              <tr>
+                <th class="phase-col">Flight phase</th>
+                <th class="threat-col">Threat(s)</th>
+                <th class="mitigation-col">Mitigation(s)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="phase-cell">
+                  <span class="phase-name">Pre-flight</span>
+                  <span class="phase-hint">E.g., MEL/CDL, Bulletins, Pax/Cabin requirements.</span>
+                </td>
+                <td>
+                  <textarea class="tem-textarea" name="dep_preflight_threats" placeholder="Identify pre-flight threats..."></textarea>
+                </td>
+                <td>
+                  <textarea class="tem-textarea" name="dep_preflight_mitigations" placeholder="Pre-flight mitigations & briefing notes..."></textarea>
+                </td>
+              </tr>
+              <tr>
+                <td class="phase-cell">
+                  <span class="phase-name">Taxi</span>
+                  <span class="phase-hint">E.g., Taxiway closures, speed limits, apron restrictions.</span>
+                </td>
+                <td>
+                  <textarea class="tem-textarea" name="dep_taxi_threats" placeholder="Identify taxi threats, hot spots, closures..."></textarea>
+                </td>
+                <td>
+                  <textarea class="tem-textarea" name="dep_taxi_mitigations" placeholder="Taxi mitigations, progressive taxi, charts..."></textarea>
+                </td>
+              </tr>
+              <tr>
+                <td class="phase-cell">
+                  <span class="phase-name">Take-off</span>
+                  <span class="phase-hint">E.g., Performance, density altitude/TAS, NADP.</span>
+                </td>
+                <td>
+                  <textarea class="tem-textarea" name="dep_takeoff_threats" placeholder="Identify takeoff & performance threats..."></textarea>
+                </td>
+                <td>
+                  <textarea class="tem-textarea" name="dep_takeoff_mitigations" placeholder="NADP profile, EOSID, derate/full thrust..."></textarea>
+                </td>
+              </tr>
+              <tr>
+                <td class="phase-cell">
+                  <span class="phase-name">Departure</span>
+                  <span class="phase-hint">E.g., SID, Climb out</span>
+                </td>
+                <td>
+                  <textarea class="tem-textarea" name="dep_climb_threats" placeholder="Identify SID, altitude restrictions, terrain..."></textarea>
+                </td>
+                <td>
+                  <textarea class="tem-textarea" name="dep_climb_mitigations" placeholder="Departure mitigations, stop altitudes, MSA..."></textarea>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sheet-footer">
+          <div>Version 5.0 Dec 2025</div>
+          <div class="footer-notice">BUSINESS DOCUMENT — This document is intended for business use and should be distributed to intended recipients only.</div>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           PAGE 2: EN-ROUTE & BRIEFINGS MATRIX
+           =================================================================== -->
+      <section class="sheet-page" id="page-2">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Emirates Flight Preparation Guide</h2>
+            <div class="section-subtitle">PAGE 2 OF 4 — EN-ROUTE BRIEFINGS & THREAT MANAGEMENT</div>
+          </div>
+        </div>
+
+        <!-- En-route Section Header -->
+        <div class="section-header" style="border-bottom-width: 2px; margin-top: 0.5rem;">
+          <h3 class="section-title">En-route</h3>
+        </div>
+
+        <!-- En-route Checklist -->
+        <div class="checklist-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); margin-bottom: 1.25rem;">
+          <label class="checklist-item">
+            <input type="checkbox" name="enroute_omc_brief" id="enroute_omc_brief">
+            <span>OM-C Area Brief</span>
+          </label>
+          <label class="checklist-item">
+            <input type="checkbox" name="enroute_lido_rsi" id="enroute_lido_rsi">
+            <span>LIDO RSI</span>
+          </label>
+          <label class="checklist-item">
+            <input type="checkbox" name="enroute_lido_crar" id="enroute_lido_crar">
+            <span>LIDO CRAR</span>
+          </label>
+          <label class="checklist-item">
+            <input type="checkbox" name="enroute_notams" id="enroute_notams">
+            <span>NOTAMS</span>
+          </label>
+        </div>
+
+        <!-- Interactive OM-C vs OM-A Matrix -->
+        <div class="matrix-container">
+          <div class="matrix-toolbar no-print">
+            <div>
+              <strong>Interactive Cross-Reference Matrix</strong> — Click any row or region to highlight required manuals.
+            </div>
+            <div>
+              <button type="button" class="btn btn-outline btn-sm" id="btnClearMatrixHighlight">Clear Highlights</button>
+            </div>
+          </div>
+
+          <table class="matrix-table" id="briefingsMatrix">
+            <thead>
+              <tr>
+                <th rowspan="2" style="width: 26%; vertical-align: bottom;">Areas Briefings (OM-C)</th>
+                <th colspan="7" class="matrix-group-header">Regions (OM-A)</th>
+                <th colspan="2" class="matrix-group-header">Additional (OM-D)</th>
+              </tr>
+              <tr>
+                <th class="col-region" data-col="afi" title="Africa-Indian Ocean">Africa-Indian Ocean (AFI)</th>
+                <th class="col-region" data-col="asia" title="Asia">Asia (ASIA)</th>
+                <th class="col-region" data-col="eur" title="European">European (EUR)</th>
+                <th class="col-region" data-col="mid" title="Middle East">Middle East (MID)</th>
+                <th class="col-region" data-col="nam" title="North American / North Atlantic / Caribbean">North American (NAM)/North Atlantic (NAT) /Caribbean (CAR)</th>
+                <th class="col-region" data-col="pac" title="Pacific">Pacific (PAC)</th>
+                <th class="col-region" data-col="sam" title="South American">South American (SAM)</th>
+                <th class="col-region" data-col="himalayas" title="Himalayas">Himalayas</th>
+                <th class="col-region" data-col="polar" title="Polar">Polar</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Africa -->
+              <tr data-row="africa">
+                <td class="area-label" title="Click to highlight required manuals">Africa</td>
+                <td class="matrix-cell has-x" data-col="afi">x</td>
+                <td class="matrix-cell" data-col="asia"></td>
+                <td class="matrix-cell" data-col="eur"></td>
+                <td class="matrix-cell" data-col="mid"></td>
+                <td class="matrix-cell" data-col="nam"></td>
+                <td class="matrix-cell" data-col="pac"></td>
+                <td class="matrix-cell has-x" data-col="sam">x</td>
+                <td class="matrix-cell" data-col="himalayas"></td>
+                <td class="matrix-cell" data-col="polar"></td>
+              </tr>
+
+              <!-- Asia Header -->
+              <tr data-row="asia-parent">
+                <td class="area-label" colspan="10" style="background-color: var(--color-bg-card-subtle); font-weight: 800;">Asia</td>
+              </tr>
+              <!-- India -->
+              <tr data-row="asia-india">
+                <td class="area-label sub-area">India</td>
+                <td class="matrix-cell" data-col="afi"></td>
+                <td class="matrix-cell has-x" data-col="asia">x</td>
+                <td class="matrix-cell" data-col="eur"></td>
+                <td class="matrix-cell" data-col="mid"></td>
+                <td class="matrix-cell" data-col="nam"></td>
+                <td class="matrix-cell" data-col="pac"></td>
+                <td class="matrix-cell" data-col="sam"></td>
+                <td class="matrix-cell" data-col="himalayas"></td>
+                <td class="matrix-cell" data-col="polar"></td>
+              </tr>
+              <!-- NE Asia -->
+              <tr data-row="asia-ne">
+                <td class="area-label sub-area">NE Asia</td>
+                <td class="matrix-cell" data-col="afi"></td>
+                <td class="matrix-cell has-x" data-col="asia">x</td>
+                <td class="matrix-cell" data-col="eur"></td>
+                <td class="matrix-cell" data-col="mid"></td>
+                <td class="matrix-cell" data-col="nam"></td>
+                <td class="matrix-cell" data-col="pac"></td>
+                <td class="matrix-cell" data-col="sam"></td>
+                <td class="matrix-cell has-x" data-col="himalayas">x</td>
+                <td class="matrix-cell" data-col="polar"></td>
+              </tr>
+              <!-- SE Asia -->
+              <tr data-row="asia-se">
+                <td class="area-label sub-area">SE Asia</td>
+                <td class="matrix-cell" data-col="afi"></td>
+                <td class="matrix-cell has-x" data-col="asia">x</td>
+                <td class="matrix-cell" data-col="eur"></td>
+                <td class="matrix-cell" data-col="mid"></td>
+                <td class="matrix-cell" data-col="nam"></td>
+                <td class="matrix-cell has-x" data-col="pac">x</td>
+                <td class="matrix-cell" data-col="sam"></td>
+                <td class="matrix-cell" data-col="himalayas"></td>
+                <td class="matrix-cell" data-col="polar"></td>
+              </tr>
+
+              <!-- Australia and New Zealand -->
+              <tr data-row="anz">
+                <td class="area-label">Australia and New Zealand</td>
+                <td class="matrix-cell" data-col="afi"></td>
+                <td class="matrix-cell" data-col="asia"></td>
+                <td class="matrix-cell" data-col="eur"></td>
+                <td class="matrix-cell" data-col="mid"></td>
+                <td class="matrix-cell" data-col="nam"></td>
+                <td class="matrix-cell has-x" data-col="pac">x</td>
+                <td class="matrix-cell" data-col="sam"></td>
+                <td class="matrix-cell" data-col="himalayas"></td>
+                <td class="matrix-cell" data-col="polar"></td>
+              </tr>
+
+              <!-- Europe and E. Europe -->
+              <tr data-row="europe">
+                <td class="area-label">Europe and E. Europe</td>
+                <td class="matrix-cell" data-col="afi"></td>
+                <td class="matrix-cell" data-col="asia"></td>
+                <td class="matrix-cell has-x" data-col="eur">x</td>
+                <td class="matrix-cell" data-col="mid"></td>
+                <td class="matrix-cell has-x" data-col="nam">x</td>
+                <td class="matrix-cell" data-col="pac"></td>
+                <td class="matrix-cell" data-col="sam"></td>
+                <td class="matrix-cell" data-col="himalayas"></td>
+                <td class="matrix-cell" data-col="polar"></td>
+              </tr>
+
+              <!-- Middle East -->
+              <tr data-row="middle-east">
+                <td class="area-label">Middle East</td>
+                <td class="matrix-cell has-x" data-col="afi">x</td>
+                <td class="matrix-cell has-x" data-col="asia">x</td>
+                <td class="matrix-cell has-x" data-col="eur">x</td>
+                <td class="matrix-cell has-x" data-col="mid">x</td>
+                <td class="matrix-cell has-x" data-col="nam">x</td>
+                <td class="matrix-cell has-x" data-col="pac">x</td>
+                <td class="matrix-cell has-x" data-col="sam">x</td>
+                <td class="matrix-cell" data-col="himalayas"></td>
+                <td class="matrix-cell" data-col="polar"></td>
+              </tr>
+
+              <!-- North America and North Atlantic -->
+              <tr data-row="north-america">
+                <td class="area-label">North America and North Atlantic</td>
+                <td class="matrix-cell" data-col="afi"></td>
+                <td class="matrix-cell" data-col="asia"></td>
+                <td class="matrix-cell" data-col="eur"></td>
+                <td class="matrix-cell" data-col="mid"></td>
+                <td class="matrix-cell has-x" data-col="nam">x</td>
+                <td class="matrix-cell" data-col="pac"></td>
+                <td class="matrix-cell" data-col="sam"></td>
+                <td class="matrix-cell" data-col="himalayas"></td>
+                <td class="matrix-cell" data-col="polar"></td>
+              </tr>
+
+              <!-- Pacific -->
+              <tr data-row="pacific">
+                <td class="area-label">Pacific</td>
+                <td class="matrix-cell" data-col="afi"></td>
+                <td class="matrix-cell" data-col="asia"></td>
+                <td class="matrix-cell" data-col="eur"></td>
+                <td class="matrix-cell" data-col="mid"></td>
+                <td class="matrix-cell" data-col="nam"></td>
+                <td class="matrix-cell has-x" data-col="pac">x</td>
+                <td class="matrix-cell" data-col="sam"></td>
+                <td class="matrix-cell" data-col="himalayas"></td>
+                <td class="matrix-cell" data-col="polar"></td>
+              </tr>
+
+              <!-- Polar Operations -->
+              <tr data-row="polar">
+                <td class="area-label">Polar Operations</td>
+                <td class="matrix-cell" data-col="afi"></td>
+                <td class="matrix-cell" data-col="asia"></td>
+                <td class="matrix-cell" data-col="eur"></td>
+                <td class="matrix-cell" data-col="mid"></td>
+                <td class="matrix-cell" data-col="nam"></td>
+                <td class="matrix-cell" data-col="pac"></td>
+                <td class="matrix-cell" data-col="sam"></td>
+                <td class="matrix-cell" data-col="himalayas"></td>
+                <td class="matrix-cell has-x" data-col="polar">x</td>
+              </tr>
+
+              <!-- South America -->
+              <tr data-row="south-america">
+                <td class="area-label">South America</td>
+                <td class="matrix-cell" data-col="afi"></td>
+                <td class="matrix-cell" data-col="asia"></td>
+                <td class="matrix-cell" data-col="eur"></td>
+                <td class="matrix-cell" data-col="mid"></td>
+                <td class="matrix-cell" data-col="nam"></td>
+                <td class="matrix-cell" data-col="pac"></td>
+                <td class="matrix-cell has-x" data-col="sam">x</td>
+                <td class="matrix-cell" data-col="himalayas"></td>
+                <td class="matrix-cell" data-col="polar"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- En-route Area Threats & Mitigations Table -->
+        <div class="data-table-wrapper">
+          <table class="data-table" id="enrouteThreatsTable">
+            <thead>
+              <tr>
+                <th style="width: 25%;">Area</th>
+                <th style="width: 37%;">Threat(s)</th>
+                <th style="width: 38%;">Mitigation(s)</th>
+                <th style="width: 40px;" class="no-print"></th>
+              </tr>
+            </thead>
+            <tbody id="enrouteThreatsBody">
+              <!-- Dynamically populated or default 5 rows -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-actions-bar no-print">
+          <button type="button" class="btn btn-outline btn-sm" id="btnAddEnrouteThreatRow">
+            ➕ Add En-route Threat Row
+          </button>
+        </div>
+
+        <div class="sheet-footer">
+          <div>Version 5.0 Dec 2025</div>
+          <div class="footer-notice">BUSINESS DOCUMENT — This document is intended for business use and should be distributed to intended recipients only.</div>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           PAGE 3: WAYPOINTS, FIR & EN-ROUTE AIRPORTS
+           =================================================================== -->
+      <section class="sheet-page" id="page-3">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Emirates Flight Preparation Guide</h2>
+            <div class="section-subtitle">PAGE 3 OF 4 — WAYPOINTS, FIR SPECIAL REQS & EN-ROUTE AERODROMES</div>
+          </div>
+        </div>
+
+        <!-- Waypoint / FIR / Special Requirements Table -->
+        <div class="data-table-wrapper">
+          <table class="data-table" id="waypointsTable">
+            <thead>
+              <tr>
+                <th style="width: 18%;">Waypoint</th>
+                <th style="width: 14%;">FIR</th>
+                <th style="width: 63%;">
+                  Special Requirements
+                  <span style="font-size: 0.68rem; font-weight: normal; text-transform: none; display: block; color: var(--color-text-muted);">
+                    (E.g. CRAR, Reporting, ADIZ, CPDLC, HF, IFBP, Oceanic Procedures, SLOP Contingency Requirements, Emergency, Misc.)
+                  </span>
+                </th>
+                <th style="width: 5%;" class="no-print"></th>
+              </tr>
+            </thead>
+            <tbody id="waypointsBody">
+              <!-- Dynamically populated or default 10 rows -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-actions-bar no-print">
+          <button type="button" class="btn btn-outline btn-sm" id="btnAddWaypointRow">
+            ➕ Add Waypoint / FIR Row
+          </button>
+          <div class="quick-tokens">
+            <span style="font-size: 0.72rem; color: var(--color-text-muted); align-self: center;">Quick Tag:</span>
+            <span class="token-chip" data-target-last="waypoint-spec" data-text="CPDLC required. ">CPDLC</span>
+            <span class="token-chip" data-target-last="waypoint-spec" data-text="HF SELCAL check. ">HF</span>
+            <span class="token-chip" data-target-last="waypoint-spec" data-text="SLOP contingency (1-2 NM Right). ">SLOP</span>
+            <span class="token-chip" data-target-last="waypoint-spec" data-text="ADIZ contact 10m prior. ">ADIZ</span>
+            <span class="token-chip" data-target-last="waypoint-spec" data-text="IFBP on 126.9. ">IFBP</span>
+            <span class="token-chip" data-target-last="waypoint-spec" data-text="CRAR oxygen escape route. ">CRAR</span>
+          </div>
+        </div>
+
+        <!-- Waypoint Notes -->
+        <div class="notes-container">
+          <label class="notes-label" for="waypoint_other_notes">Other Notes:</label>
+          <textarea class="notes-textarea" id="waypoint_other_notes" name="waypoint_other_notes" placeholder="Additional FIR transition notes, CPDLC login addresses, HF primary/secondary frequencies, etc..."></textarea>
+        </div>
+
+        <!-- En-route Airports Section Header -->
+        <div class="section-header" style="border-bottom-width: 2px; margin-top: 1.5rem;">
+          <h3 class="section-title">En-route Airports</h3>
+        </div>
+
+        <!-- Can We Model Guidance Box -->
+        <div class="info-callout" style="border-left-color: var(--color-brand-red); margin-bottom: 1rem;">
+          <strong>Consider the use of the ‘Can we…’ model:</strong><br>
+          Can we get there (range), do the approach and landing (weather vs approach minima), stop (consider most limiting LDA v LDR en-route), turn-around (ground operations and services), go-around (performance), Plan B (options).
+        </div>
+
+        <!-- En-route Airports Table -->
+        <div class="data-table-wrapper">
+          <table class="data-table" id="airportsTable">
+            <thead>
+              <tr>
+                <th style="width: 14%;">Airport</th>
+                <th style="width: 10%;">Class.</th>
+                <th style="width: 24%;">Weather</th>
+                <th style="width: 10%;">Rwy</th>
+                <th style="width: 14%;">App.</th>
+                <th style="width: 24%;">Threats</th>
+                <th style="width: 4%;" class="no-print"></th>
+              </tr>
+            </thead>
+            <tbody id="airportsBody">
+              <!-- Dynamically populated or default 8 rows -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-actions-bar no-print">
+          <button type="button" class="btn btn-outline btn-sm" id="btnAddAirportRow">
+            ➕ Add En-route Airport Row
+          </button>
+        </div>
+
+        <!-- En-route Airports Notes -->
+        <div class="notes-container">
+          <label class="notes-label" for="airports_other_notes">Other Notes:</label>
+          <textarea class="notes-textarea" id="airports_other_notes" name="airports_other_notes" placeholder="Adequate / suitable aerodrome status, curfew times, ground handling, fuel availability..."></textarea>
+        </div>
+
+        <div class="sheet-footer">
+          <div>Version 5.0 Dec 2025</div>
+          <div class="footer-notice">BUSINESS DOCUMENT — This document is intended for business use and should be distributed to intended recipients only.</div>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           PAGE 4: ARRIVAL & ALTERNATE
+           =================================================================== -->
+      <section class="sheet-page" id="page-4">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Emirates Flight Preparation Guide</h2>
+            <div class="section-subtitle">PAGE 4 OF 4 — ARRIVAL & ALTERNATE THREATS</div>
+          </div>
+        </div>
+
+        <!-- Arrival Section Header -->
+        <div class="section-header" style="border-bottom-width: 2px;">
+          <h3 class="section-title">Arrival</h3>
+        </div>
+
+        <!-- Arrival Weather Box -->
+        <div class="weather-block">
+          <div class="weather-header">
+            <span>Arrival Weather (METAR / TAF / ATIS / Expected Runway / Minima)</span>
+            <div class="quick-tokens no-print">
+              <span class="token-chip" data-target="arr_weather" data-text="CAVOK ">CAVOK</span>
+              <span class="token-chip" data-target="arr_weather" data-text="TEMPO ">TEMPO</span>
+              <span class="token-chip" data-target="arr_weather" data-text="CAT II/III ">CAT II/III</span>
+              <span class="token-chip" data-target="arr_weather" data-text="XWIND ">XWIND</span>
+              <span class="token-chip" data-target="arr_weather" data-text="WET/SLIPPERY ">WET/SLIPPERY</span>
+            </div>
+          </div>
+          <textarea class="weather-textarea" id="arr_weather" name="arr_weather" rows="2" placeholder="Enter destination weather, landing runway in use, approach type, expected transition..."></textarea>
+        </div>
+
+        <!-- Arrival TEM Table -->
+        <div class="data-table-wrapper">
+          <table class="data-table tem-table">
+            <thead>
+              <tr>
+                <th class="phase-col">Flight phase</th>
+                <th class="threat-col">Threat(s)</th>
+                <th class="mitigation-col">Mitigation(s)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="phase-cell">
+                  <span class="phase-name">Arrival</span>
+                  <span class="phase-hint">E.g., Transition/STAR</span>
+                </td>
+                <td><textarea class="tem-textarea" name="arr_star_threats" placeholder="STAR, altitude/speed constraints, traffic..."></textarea></td>
+                <td><textarea class="tem-textarea" name="arr_star_mitigations" placeholder="Energy management, speed brakes, early descent..."></textarea></td>
+              </tr>
+              <tr>
+                <td class="phase-cell">
+                  <span class="phase-name">Approach</span>
+                  <span class="phase-hint">E.g., density altitude, FAP/FAF altitude, RoD</span>
+                </td>
+                <td><textarea class="tem-textarea" name="arr_app_threats" placeholder="Approach profile, high rate of descent, terrain..."></textarea></td>
+                <td><textarea class="tem-textarea" name="arr_app_mitigations" placeholder="Stabilized criteria (1000' / 500'), flap schedule..."></textarea></td>
+              </tr>
+              <tr>
+                <td class="phase-cell">
+                  <span class="phase-name">Missed Approach</span>
+                  <span class="phase-hint">E.g., MISAP ALT, tracking.</span>
+                </td>
+                <td><textarea class="tem-textarea" name="arr_missed_threats" placeholder="Missed approach altitude, turn direction, climb gradient..."></textarea></td>
+                <td><textarea class="tem-textarea" name="arr_missed_mitigations" placeholder="Pre-briefed GA actions, TOGA, MCP selections..."></textarea></td>
+              </tr>
+              <tr>
+                <td class="phase-cell">
+                  <span class="phase-name">Landing</span>
+                  <span class="phase-hint">E.g., LDA, braking & exit strategy.</span>
+                </td>
+                <td><textarea class="tem-textarea" name="arr_landing_threats" placeholder="Short runway, tailwind, wet surface, fast exit..."></textarea></td>
+                <td><textarea class="tem-textarea" name="arr_landing_mitigations" placeholder="Autobrake setting, reverse thrust, touchdown zone..."></textarea></td>
+              </tr>
+              <tr>
+                <td class="phase-cell">
+                  <span class="phase-name">Taxi/Parking</span>
+                  <span class="phase-hint">Taxiway closures, speed limits, apron restrictions, guidance.</span>
+                </td>
+                <td><textarea class="tem-textarea" name="arr_taxi_threats" placeholder="Hot spots, low visibility taxi, marshaller, apron congestion..."></textarea></td>
+                <td><textarea class="tem-textarea" name="arr_taxi_mitigations" placeholder="Airport moving map, sterile cockpit until gate..."></textarea></td>
+              </tr>
+              <tr>
+                <td class="phase-cell">
+                  <span class="phase-name">Post-flight</span>
+                  <span class="phase-hint">Handover, engineering, debrief</span>
+                </td>
+                <td><textarea class="tem-textarea" name="arr_postflight_threats" placeholder="Fatigue, debrief notes, tech log entries..."></textarea></td>
+                <td><textarea class="tem-textarea" name="arr_postflight_mitigations" placeholder="LIFUS debrief, complete documentation..."></textarea></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Alternate Section Header -->
+        <div class="section-header" style="border-bottom-width: 2px; margin-top: 1.5rem;">
+          <h3 class="section-title">Alternate</h3>
+        </div>
+
+        <!-- Alternate Weather Box -->
+        <div class="weather-block">
+          <div class="weather-header">
+            <span>Alternate Weather</span>
+            <div class="quick-tokens no-print">
+              <span class="token-chip" data-target="altn_weather" data-text="CAVOK ">CAVOK</span>
+              <span class="token-chip" data-target="altn_weather" data-text="TEMPO ">TEMPO</span>
+              <span class="token-chip" data-target="altn_weather" data-text="HOLDING WX ">HOLDING WX</span>
+              <span class="token-chip" data-target="altn_weather" data-text="ADEQUATE ">ADEQUATE</span>
+            </div>
+          </div>
+          <textarea class="weather-textarea" id="altn_weather" name="altn_weather" rows="2" placeholder="Alternate aerodrome weather minima, forecast trends, landing runway..."></textarea>
+        </div>
+
+        <!-- Alternate TEM Table -->
+        <div class="data-table-wrapper">
+          <table class="data-table tem-table">
+            <thead>
+              <tr>
+                <th class="phase-col">Flight phase</th>
+                <th class="threat-col">Threat</th>
+                <th class="mitigation-col">Mitigation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="phase-cell">
+                  <span class="phase-name">Diversion</span>
+                  <span class="phase-hint">E.g., fuel, route, wx.</span>
+                </td>
+                <td><textarea class="tem-textarea" name="altn_div_threats" placeholder="Diversion fuel, routing, ATC clearance delay..."></textarea></td>
+                <td><textarea class="tem-textarea" name="altn_div_mitigations" placeholder="Commit to divert fuel calculation, alternate flight plan..."></textarea></td>
+              </tr>
+              <tr>
+                <td class="phase-cell">
+                  <span class="phase-name">Arrival</span>
+                  <span class="phase-hint">STAR, airspace</span>
+                </td>
+                <td><textarea class="tem-textarea" name="altn_arr_threats" placeholder="Unfamiliar STAR or airspace..."></textarea></td>
+                <td><textarea class="tem-textarea" name="altn_arr_mitigations" placeholder="Early chart review, request radar vectors if required..."></textarea></td>
+              </tr>
+              <tr>
+                <td class="phase-cell">
+                  <span class="phase-name">Approach</span>
+                  <span class="phase-hint">Available approaches, minima</span>
+                </td>
+                <td><textarea class="tem-textarea" name="altn_app_threats" placeholder="Non-precision approach, wind limits..."></textarea></td>
+                <td><textarea class="tem-textarea" name="altn_app_mitigations" placeholder="Brief approach early, crosscheck minimums..."></textarea></td>
+              </tr>
+              <tr>
+                <td class="phase-cell">
+                  <span class="phase-name">Missed Approach</span>
+                  <span class="phase-hint">Secondary alternate / fuel</span>
+                </td>
+                <td><textarea class="tem-textarea" name="altn_missed_threats" placeholder="Fuel reserves after missed approach at alternate..."></textarea></td>
+                <td><textarea class="tem-textarea" name="altn_missed_mitigations" placeholder="Execute missed approach procedure, mayday fuel if needed..."></textarea></td>
+              </tr>
+              <tr>
+                <td class="phase-cell">
+                  <span class="phase-name">Landing</span>
+                  <span class="phase-hint">Runway length, contamination</span>
+                </td>
+                <td><textarea class="tem-textarea" name="altn_landing_threats" placeholder="LDA limiting, brake energy..."></textarea></td>
+                <td><textarea class="tem-textarea" name="altn_landing_mitigations" placeholder="Full reverse, max manual braking if required..."></textarea></td>
+              </tr>
+              <tr>
+                <td class="phase-cell">
+                  <span class="phase-name">Taxi/Parking</span>
+                  <span class="phase-hint">Ground ops, parking stand</span>
+                </td>
+                <td><textarea class="tem-textarea" name="altn_taxi_threats" placeholder="Unfamiliar ground layout, no Emirates ground handling..."></textarea></td>
+                <td><textarea class="tem-textarea" name="altn_taxi_mitigations" placeholder="Progressive taxi instructions, coordinate with handling agent..."></textarea></td>
+              </tr>
+              <tr>
+                <td class="phase-cell">
+                  <span class="phase-name">Post-flight</span>
+                  <span class="phase-hint">Passenger welfare, diversion report</span>
+                </td>
+                <td><textarea class="tem-textarea" name="altn_postflight_threats" placeholder="Passenger welfare, customs/immigration, crew duty hours..."></textarea></td>
+                <td><textarea class="tem-textarea" name="altn_postflight_mitigations" placeholder="Contact Emirates IOC/Hub Control, coordinate crew duty limits..."></textarea></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sheet-footer">
+          <div>Version 5.0 Dec 2025</div>
+          <div class="footer-notice">BUSINESS DOCUMENT — This document is intended for business use and should be distributed to intended recipients only.</div>
+        </div>
+      </section>
+
+    </form>
+  </main>
+
+  <!-- Confirmation Reset Modal -->
+  <div class="modal-overlay" id="resetModal">
+    <div class="modal-card">
+      <h3 class="modal-title">Reset Flight Preparation Form?</h3>
+      <p class="modal-desc">
+        This will clear all flight details, checklists, threats, waypoints, and weather notes from this form and local storage. This action cannot be undone.
+      </p>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" id="btnCancelReset">Cancel</button>
+        <button type="button" class="btn btn-primary" id="btnConfirmReset">Yes, Clear All</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notifications -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Application Logic -->
+  <script src="app.js"></script>
+</body>
+</html>
