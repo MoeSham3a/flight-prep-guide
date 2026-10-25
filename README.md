@@ -2,6 +2,10 @@
 **Version 5.0 (Dec 2025)**  
 *For LIFUS Training & Line Operations*
 
+[![Deploy to GitHub Pages](https://github.com/MoeSham3a/flight-prep-guide/actions/workflows/pages.yml/badge.svg)](https://github.com/MoeSham3a/flight-prep-guide/actions/workflows/pages.yml)
+
+🌐 **Live Application**: [https://moesham3a.github.io/flight-prep-guide/](https://moesham3a.github.io/flight-prep-guide/)
+
 ---
 
 ## 🚀 Overview
